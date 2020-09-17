@@ -1,51 +1,46 @@
-import React, { Component } from 'react';
-import axios from '../../axios';
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
-import './Blog.css';
+import React, { Component } from "react";
+import Posts from "../Posts/Posts";
+// import FullPost from "../FullPost/FullPost";
+import NewPost from "../NewPost/NewPost";
+import {Route, Link} from "react-router-dom";
+import "./Blog.css";
 
 class Blog extends Component {
-    state =({
-        posts:[],
-        selectedPostId:null,
-    })
+ 
 
-    componentDidMount()
-    {
-        axios.get('/posts').then(response=>{
-            const posts = response.data.slice(0,4);
-            const updatedPost = posts.map(post=>{
-                return {...post, author:'Ankit'}
-            })
-
-            this.setState({posts:updatedPost});
-        });
-    }
-    selectPostHandler = (id)=>
-    {
-        this.setState({selectedPostId:id})
-        console.log(id);
-    }
-    render () {
-        const posts = this.state.posts.map(post=>{
-           return <Post clicked={()=>this.selectPostHandler(post.id)} key={post.id} author={post.author} body={post.body}title={post.title} /> 
-         })
-        return (
-            <div>
-                <section className="Posts">
-                {posts}
-
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
-            </div>
-        );
-    }
+ 
+  render() {
+    
+    return (
+      <div className="Blog">
+        <header>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to={{
+                  pathname:"/new-post",
+                  hash:"#submit",
+                  search :"?quick-submit=true"
+                }}> New Post</Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <Route path="/" exact component={Posts}/>
+        <Route path="/new-post" exact component={NewPost}/>
+        {/* <section>
+          <FullPost id={this.state.selectedPostId} />
+        </section>
+        <section>
+          <NewPost />
+        </section>
+        <Posts></Posts> */}
+      </div>
+    );
+  }
 }
 
 export default Blog;
